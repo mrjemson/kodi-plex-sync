@@ -2,6 +2,8 @@ Script to sync watched status between media centers, supports Kodi and Plex for 
 Both Episodes and Movies are supported. Sync at Tv Show/season level is not supported.
 Basic knowledge of python is expected to configure/run this.
 
+This is a fork of hoodakaushal's original that simplifies configuration and adds ability to sync between Linux to Windows installations, as well as setups where the file path is different.
+
 Matching files across media centers is done by file path. A video in plex and kodi is considered same if they both have the same underlying file.
 This has the advantage of not requiring any external API (eg TVDB) and can be run offline.
 Paths are treated as case sensitive by default, on *nix systems this is fine, on Windows it can cause videos to not be matched.
@@ -16,7 +18,7 @@ python3
 plexapi and requests module for python (pip install -r requirements.txt)
 
 Usage/Config:
-Change the endpoints for plex and kodi according to your setup in sync.py and execute it as a python module
+Change the configuration for plex and kodi according to your setup in sync.py and execute it as a python module
 (refer to run.sh/run.bat for sample command)
 
 Set the sync mode and strictness as you want (default is bidirectional sync without strict checking)
@@ -30,18 +32,36 @@ Set the sync mode and strictness as you want (default is bidirectional sync with
     True -> If media in a and not b, raise error. If media in b and not a, raise error only for BIDIRECTIONAL sync mode.
     False -> Ignore discrepancies in media in a and b.
     Note that if strict, checking is done before doing any updates.
+
+    Normalization:
+    Set normalization['enable'] to True to normalize filepaths between installations. Eg. Modify drive letter from Z: to M: to the path matches between installs.
+    The pathMap entries below can be edited or removed as needed or additional lines can be added. The first reference in the list will be updated to the second instance when the matching is completed to allow syncing between different paths.
     
+    Log Changes:
+    Set logChanges to True to output details of failed updated to console and in the log. False will disable logging output of changes.
+
     a and b are the first and second argument to the MediaSyncer constructor (the second to last line in kodiplex/sync.py)
  
- The default is bidirectional sync. If you wanted to sync only from kodi to plex, you need to change that line to
+    kodiURL:
+    Update this with the URL of your Kodi Install.
+    
+    plexURL:
+    Update this with the URL of your Plex Install.
+    
+    plexToken:
+    Add your Plex token here for authentication. Otherwise this can be removed by setting this variable to None (no quotes)
+ 
+By default the script will sync from Kodi to Plex
 
-    sync = MediaSyncer(kodiMedia, plexMedia, 0, strict=False)
+    sync = MediaSyncer(kodiMedia, plexMedia, 0, strict, logChanges, normalize)
 
  And for syncing only from plex to kodi,
 
-    sync = MediaSyncer(plexMedia, kodiMedia, 0, strict=False)
+    sync = MediaSyncer(kodiMedia, plexMedia, 0, strict, logChanges, normalize)
 
 And just let it run!
+
+You could also modify with a small amount of Python knowledge to sync Plex to Plex or Kodi to Kodi if ever needed for any reason.
 
 Once you have it configured to work with your setup, you can have it run periodically via Scheduled Task/cron.
 
