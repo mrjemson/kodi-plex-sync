@@ -28,6 +28,7 @@ class MediaSyncer:
             raise ValueError("mode must be 0,1 or 2")
         self.mode = mode
         self.strict = strict
+        self.logChanges = logChanges
         self.normalize = normalize
 
     def verify(self):
