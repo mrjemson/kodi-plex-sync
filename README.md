@@ -23,7 +23,7 @@ Change the configuration for plex and kodi according to your setup in sync.py an
 
 Set the sync mode and strictness as you want (default is bidirectional sync without strict checking)
 
-    Sync mode:
+    Sync mode: (syncDir Variable)
     0 -> UNIDIRECTIONAL FROM a to b, a always overrides b. In strict mode media in b but not a is ignored.
     1 -> BIDIRECTIONAL, if a and b conflict, mark both as watched
     2 -> BIDIRECTIONAL, if a and b conflict, mark both as unwatched
@@ -53,11 +53,11 @@ Set the sync mode and strictness as you want (default is bidirectional sync with
  
 By default the script will sync from Kodi to Plex
 
-    sync = MediaSyncer(kodiMedia, plexMedia, 0, strict, logChanges, normalize)
+    sync = MediaSyncer(kodiMedia, plexMedia, syncDir, strict, logChanges, normalize)
 
  And for syncing only from plex to kodi,
 
-    sync = MediaSyncer(kodiMedia, plexMedia, 0, strict, logChanges, normalize)
+    sync = MediaSyncer(kodiMedia, plexMedia, syncDir, strict, logChanges, normalize)
 
 And just let it run!
 
